@@ -1,0 +1,37 @@
+pipeline {
+  agent any
+
+  stages {
+    stage('CI - Checkout') {
+      steps {
+        echo 'Checking out code'
+      }
+    }
+
+    stage('CI - Build') {
+      steps {
+        echo 'Building app'
+        sh 'echo "build successful"'
+      }
+    }
+
+    stage('CI - Test') {
+      steps {
+        echo 'Running tests'
+        sh 'echo "tests passed"'
+      }
+    }
+
+    stage('CD - Deploy') {
+      steps {
+        echo 'Deploying application'
+        sh 'echo "app deployed to server"'
+      }
+    }
+  }
+
+  post {
+    success { echo 'CI/CD Demo Completed Successfully' }
+    failure { echo 'Pipeline Failed' }
+  }
+}
