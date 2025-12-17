@@ -1,0 +1,25 @@
+pipeline {
+  agent any
+
+  stages {
+    stage('Clone Repo') {
+      steps {
+        git 'https://github.com/Harsh-GitHub-Journey/Train-Ticket-Reservation-System.git'
+      }
+    }
+
+    stage('Build with Maven') {
+      steps {
+        sh '''
+          /mnt/apache-maven-3.9.12/bin/mvn -v
+          /mnt/apache-maven-3.9.12/bin/mvn clean install
+        '''
+      }
+    }
+  }
+
+  post {
+    success { echo 'Build SUCCESS – pom.xml detected & compiled' }
+    failure { echo 'Build FAILED' }
+  }
+}
