@@ -1,0 +1,74 @@
+pipeline {
+  agent any
+
+  parameters {
+    string(name: 'APP_ENV', defaultValue: 'dev', description: 'Environment name')
+    booleanParam(name: 'RUN_TESTS', defaultValue: true, description: 'Run tests?')
+  }
+
+  environment {
+    APP_NAME   = 'TrainBook-1.0.0-SNAPSHOT'
+    MAVEN_HOME = '/mnt/apache-maven-3.9.12'
+  }
+
+  stages {
+
+    stage('Checkout') {
+      steps {
+        withCredentials([usernamePassword(
+          credentialsId: 'demo-git-creds',
+          usernameVariable: 'GIT_USER',
+          passwordVariable: 'GIT_PASS'
+        )]) {
+          sh '''
+            git clone https://github.com/Harsh-GitHub-Journey/Train-Ticket-Reservation-System.git
+          '''
+        }
+      }
+    }
+
+    stage('Build') {
+      steps {
+        sh '''
+          cd Train-Ticket-Reservation-System
+          echo "App: $APP_NAME"
+          echo "Env: $APP_ENV"
+          $MAVEN_HOME/bin/mvn -v
+          $MAVEN_HOME/bin/mvn clean compile
+        '''
+      }
+    }
+
+    stage('Test') {
+      when { expression { params.RUN_TESTS } }
+      steps {
+        sh '''
+          cd Train-Ticket-Reservation-System
+          $MAVEN_HOME/bin/mvn test
+        '''
+      }
+    }
+
+    stage('Package') {
+      steps {
+        sh '''
+          cd Train-Ticket-Reservation-System
+          $MAVEN_HOME/bin/mvn package
+        '''
+      }
+    }
+
+    stage('Deploy (Demo)') {
+      steps {
+        sh '''
+          echo "Deploying $APP_NAME to $APP_ENV environment"
+        '''
+      }
+    }
+  }
+
+  post {
+    success { echo 'CI/CD PIPELINE SUCCESS 🎉' }
+    failure { echo 'CI/CD PIPELINE FAILED ❌' }
+  }
+}
