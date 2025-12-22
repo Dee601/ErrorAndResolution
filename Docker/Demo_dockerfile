@@ -1,0 +1,25 @@
+# Base image
+FROM tomcat:9.0-jdk17
+
+# Metadata
+LABEL app="war-demo"
+LABEL purpose="Dockerfile basics demo"
+
+# Environment variables
+ENV APP_NAME=sample
+ENV APP_PORT=8080
+
+# Working directory
+WORKDIR /usr/local/tomcat
+
+# Cleanup default apps
+RUN rm -rf webapps/*
+
+# Copy WAR file
+COPY TrainBook-1.0.0-SNAPSHOT.war webapps/ROOT.war
+
+# Expose application port
+EXPOSE 8080
+
+# Start Tomcat
+CMD ["catalina.sh", "run"]
