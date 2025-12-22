@@ -1,5 +1,6 @@
 # 🐳 Docker – One Page Command Poster
 
+```bash
 ## IMAGES
 docker build -t app:1.0 .        # Build image
 docker images                    # List images
