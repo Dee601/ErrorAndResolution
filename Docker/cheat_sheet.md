@@ -1,13 +1,12 @@
 # 🐳 Docker – One Page Command Poster
 
 ## IMAGES
-```bash
 docker build -t app:1.0 .        # Build image
 docker images                    # List images
 docker pull nginx                # Pull image
 docker rmi image_id              # Remove image
 
-## **CONTAINERS**
+## CONTAINERS
 docker run -d -p 8080:80 --name c1 app   # Run container
 docker ps                               # Running containers
 docker ps -a                            # All containers
