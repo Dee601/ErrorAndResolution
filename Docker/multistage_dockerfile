@@ -1,0 +1,33 @@
+# ================= STAGE 1 : PREPARE =================
+FROM alpine:3.19 AS builder
+
+LABEL stage="builder"
+WORKDIR /app
+
+# Copy pre-built WAR file
+COPY TrainBook-1.0.0-SNAPSHOT.war ./sample.war
+
+# ================= STAGE 2 : RUNTIME =================
+FROM tomcat:9.0-jdk17
+
+LABEL stage="runtime"
+ENV APP_ENV=prod
+WORKDIR /usr/local/tomcat
+
+# Remove default apps
+RUN rm -rf webapps/*
+
+# Copy WAR from stage 1
+COPY --from=builder /app/sample.war webapps/ROOT.war
+
+# Expose port
+EXPOSE 8080
+
+# Start Tomcat
+CMD ["catalina.sh", "run"]
+
+
+
+#to run use commands as below
+#docker build -t multi_stage .
+#docker run -d -p 8080:8080 --name war-demo-class2 multi_stage
