@@ -1,5 +1,4 @@
-# docker-compose.yml  (MULTI-CONTAINER DEMO – without nginx)
-version: "3.9"
+version: "2.2"
 
 services:
   app:
@@ -14,8 +13,6 @@ services:
       - ./TrainBook-1.0.0-SNAPSHOT.war:/usr/local/tomcat/webapps/ROOT.war
     depends_on:
       - db
-    networks:
-      - demo-net
     command: ["catalina.sh", "run"]
 
   db:
@@ -24,10 +21,3 @@ services:
     environment:
       MYSQL_ROOT_PASSWORD: root123
       MYSQL_DATABASE: demo
-    networks:
-      - demo-net
-
-
-networks:
-  demo-net:
-    driver: bridge
