@@ -99,29 +99,87 @@ docker run -dit --name db --network demo-net busybox
 docker exec -it app ping db
 ```
 
+Explanation:
+- `db` is resolved using Docker DNS
+- No IP address is used
+- Simulates real-world **app → database** communication
+
 ---
 
 ## Port Mapping (Container ↔ Host)
+
+### Problem
+- Application runs inside a container
+- Host cannot access it directly
 
 ### Solution
 ```bash
 docker run -d -p 8080:80 nginx
 ```
 
+Access in browser: `http://localhost:8080`
+
 ---
 
-## Hands-on Lab
+## 35–50 Minutes | Hands-on Lab
 
+### Task 1: Normal Working Case
+- Create a custom network
+- Run two containers on it
+- Ping one container from another
+
+---
+
+### Task 2: Break & Fix (Very Important)
+
+#### ❌ Break: Run Containers on Default Network
 ```bash
 docker run -dit --name test1 busybox
 docker run -dit --name test2 busybox
 docker exec -it test1 ping test2
 ```
 
+Expected result:
+- Ping fails
+- Container name is not resolved
+- Reason: default bridge has no DNS
+
+---
+
+#### ✅ Fix: Connect Containers to Custom Network
 ```bash
 docker network connect demo-net test1
 docker network connect demo-net test2
+docker exec -it test1 ping test2
 ```
+
+Result:
+- Ping works
+- Docker DNS resolves container names
+
+---
+
+## 50–60 Minutes | Wrap-up
+
+### Network Types (One Line Each)
+- **bridge** → Same host, most common
+- **host** → No isolation, high performance
+- **none** → No networking
+- **overlay** → Multi-host (advanced)
+
+---
+
+## Common Beginner Mistakes
+- Using container IP addresses
+- Forgetting to create a custom network
+- Confusing `EXPOSE` with `-p`
+
+---
+
+## Real-World Mapping
+- App container → backend service
+- DB container → database
+- Docker network → Kubernetes Service (future topic)
 
 ---
 
